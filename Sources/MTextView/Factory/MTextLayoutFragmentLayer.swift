@@ -7,8 +7,8 @@
 
 import UIKit
 
-public final class MTextLayoutFragmentLayer: MTextLayer {
-  var layoutFragment: NSTextLayoutFragment
+final class MTextLayoutFragmentLayer: MTextLayer {
+  private var layoutFragment: NSTextLayoutFragment
   
   init(layoutFragment: NSTextLayoutFragment, contentsScale: CGFloat) {
     self.layoutFragment = layoutFragment

@@ -7,8 +7,8 @@
 
 import Foundation
 
-public protocol Applicable {}
-public extension Applicable {
+package protocol Applicable {}
+package extension Applicable {
     @discardableResult
     func apply(block: (Self) -> Void) -> Self {
         block(self)
