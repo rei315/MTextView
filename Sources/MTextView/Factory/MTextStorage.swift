@@ -7,7 +7,12 @@
 
 import UIKit
 
-final class MTextStorage {
+public final class MTextStorage {
   var traitCollection: UITraitCollection = .current
-  var yPadding: CGFloat = 2
+  var yPadding: CGFloat = 0
+  
+  public init(traitCollection: UITraitCollection = .current, yPadding: CGFloat = 0) {
+    self.traitCollection = traitCollection
+    self.yPadding = yPadding
+  }
 }

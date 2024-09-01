@@ -7,39 +7,39 @@
 
 import UIKit
 
-final class MTextLayoutDataFactory {
+public final class MTextLayoutDataFactory {
   private let textLayoutManager: NSTextLayoutManager = .init()
   private let textContentStorage: NSTextContentStorage = .init()
   private let textContainer: NSTextContainer = .init()
   private let textStorage: NSTextStorage = .init()
   
-  init() {
+  public init() {
     textLayoutManager.textContainer = textContainer
     textContentStorage.addTextLayoutManager(textLayoutManager)
     textContentStorage.textStorage = textStorage
     textContainer.lineFragmentPadding = 0
   }
   
-  func setup(delegate: NSTextViewportLayoutControllerDelegate) {
+  public func setup(delegate: NSTextViewportLayoutControllerDelegate) {
     textLayoutManager.textViewportLayoutController.delegate = delegate
   }
   
-  func attributedString() -> NSAttributedString? {
+  public func attributedString() -> NSAttributedString? {
     textContentStorage.attributedString
   }
   
-  func update(newValue: NSAttributedString?) {
+  public func update(newValue: NSAttributedString?) {
     textContentStorage.performEditingTransaction {
       textContentStorage.attributedString = newValue
     }
   }
   
-  func updateViewport() {
+  public func updateViewport() {
     textLayoutManager.textViewportLayoutController.layoutViewport()
   }
   
   @MainActor
-  func make(for size: CGSize, storage: MTextStorage) -> MTextLayoutData {
+  public func make(for size: CGSize, storage: MTextStorage) -> MTextLayoutData {
     textContainer.size = size
     
     var layoutWidth: Double = 0
@@ -75,6 +75,21 @@ final class MTextLayoutDataFactory {
     let layoutSize: CGSize = .init(width: layoutWidth, height: layoutHeight)
     
     return .init(size: layoutSize, attachmentViews: textAttachmentViews)
+  }
+  
+  @MainActor
+  public func layout(for size: CGSize, storage: MTextStorage) -> CGSize {
+    textContainer.size = size
+    
+    var layoutWidth: Double = 0
+    var layoutHeight: Double = 0
+    textLayoutManager.enumerateTextLayoutFragments(from: nil, options: [.ensuresLayout, .ensuresExtraLineFragment]) { fragment in
+      layoutWidth = max(fragment.layoutFragmentFrame.width, layoutWidth)
+      layoutHeight = max(fragment.layoutFragmentFrame.maxY, layoutHeight)
+      return true
+    }
+    let layoutSize: CGSize = .init(width: layoutWidth, height: layoutHeight)
+    return layoutSize
   }
 }
 
