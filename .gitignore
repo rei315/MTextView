@@ -51,4 +51,4 @@ timeline.xctimeline
 *_Build.log
 
 .DS_Store
-*/xcuserdata/
+Playground.swiftpm/.swiftpm
