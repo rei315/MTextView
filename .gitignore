@@ -49,3 +49,5 @@ timeline.xctimeline
 
 # xcodebuild log
 *_Build.log
+
+.DS_Store
