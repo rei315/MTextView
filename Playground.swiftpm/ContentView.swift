@@ -39,7 +39,15 @@ final class ViewController: UITableViewController {
     snapshot.deleteAllItems()
     snapshot.appendSections([.items])
     snapshot.appendItems((0..<10).map({ _ in
-      return Item(attributedString: .init(string: "hello"))
+      let result = NSMutableAttributedString(string: "hello")
+      let attachment = SampleAttachment.make(
+        textRect: .init(x: 0, y: -5, width: 20, height: 20),
+        offset: .zero
+      )
+      if let attachment {
+        result.append(.init(attachment: attachment))
+      }
+      return Item(attributedString: result)
     }), toSection: .items)
     
     dataSource.apply(snapshot, animatingDifferences: false)

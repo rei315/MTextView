@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class MViewAttachment: NSTextAttachment {
+open class MViewAttachment: NSTextAttachment {
   public let offset: CGPoint
   public let textRect: CGRect
   
@@ -26,7 +26,7 @@ public class MViewAttachment: NSTextAttachment {
   }
 }
 
-public class ViewAttachmentProvider: NSTextAttachmentViewProvider {
+open class ViewAttachmentProvider: NSTextAttachmentViewProvider {
   public override init(textAttachment: NSTextAttachment, parentView: UIView?, textLayoutManager: NSTextLayoutManager?, location: any NSTextLocation) {
     super.init(textAttachment: textAttachment, parentView: parentView, textLayoutManager: textLayoutManager, location: location)
     tracksTextAttachmentViewBounds = true

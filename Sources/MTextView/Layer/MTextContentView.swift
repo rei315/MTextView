@@ -23,7 +23,6 @@ public final class MTextContentView: UIView {
   
   private var layers = NSMapTable<NSTextLayoutFragment, MTextLayoutFragmentLayer>.weakToWeakObjects()
   private let contentLayer = MTextLayer()
-  private var textAttachmentViews: [(UIView, CGRect)] = []
   
   private var updatingLayers: Set<CALayer> = []
   private var updatingOffsets: Set<CGFloat> = []
@@ -52,12 +51,12 @@ public final class MTextContentView: UIView {
   public override func layoutSubviews() {
     super.layoutSubviews()
     if !needUpdateLayout {
-      updateContentSizeIfNeeded(needUpdateViewport: true)
+      update(needUpdateViewport: true)
       contentLayer.frame = bounds
     }
   }
   
-  func updateContentSizeIfNeeded(needUpdateViewport: Bool = false) {
+  public func update(needUpdateViewport: Bool = false) {
     if needUpdateViewport {
       factory.updateViewport()
     }
@@ -70,12 +69,31 @@ public final class MTextContentView: UIView {
       cache.store(data, for: key)
       layoutData = data
     }
+    updateTextAttachments(with: layoutData.attachmentViews)
+    updateContentSizeIfNeeded(needUpdateViewport: needUpdateViewport, layoutData: layoutData)
+  }
+  
+  private func updateContentSizeIfNeeded(needUpdateViewport: Bool, layoutData: MTextLayoutData) {
     let layoutHeight = layoutData.size.height
     if layoutHeight != bounds.height {
       bounds.size.height = layoutHeight
       invalidateIntrinsicContentSize()
       setNeedsDisplay()
     }
+  }
+  
+  private func updateTextAttachments(with attachmentViews: [(UIView, CGRect)]) {
+    subviews
+      .filter { !attachmentViews.map(\.0).contains($0) }
+      .forEach { $0.removeFromSuperview() }
+    
+    attachmentViews
+      .forEach { (view, frame) in
+        if !subviews.contains(view) {
+          addSubview(view)
+        }
+        view.frame = frame
+      }
   }
   
   public override var intrinsicContentSize: CGSize {
@@ -138,6 +156,6 @@ extension MTextContentView: NSTextViewportLayoutControllerDelegate {
     for layer in contentLayer.sublayers ?? [] where !updatingLayers.contains(layer) {
       layer.removeFromSuperlayer()
     }
-    updateContentSizeIfNeeded()
+    update()
   }
 }

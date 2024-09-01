@@ -51,6 +51,6 @@ public class MTextView: UIView {
   open override func layoutSubviews() {
     super.layoutSubviews()
     contentView.frame = bounds
-    contentView.updateContentSizeIfNeeded()
+    contentView.update()
   }
 }
