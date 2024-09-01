@@ -14,6 +14,8 @@ public final class MTextLayoutFragmentLayer: MTextLayer {
     self.layoutFragment = layoutFragment
     super.init()
     self.contentsScale = contentsScale
+    isOpaque = false
+    drawsAsynchronously = true
     updateGeometry()
     setNeedsDisplay()
   }

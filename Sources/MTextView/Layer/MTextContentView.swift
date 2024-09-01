@@ -39,6 +39,7 @@ public final class MTextContentView: UIView {
   }
   
   private func setup() {
+    storage.traitCollection = traitCollection
     layers = .weakToWeakObjects()
     factory.setup(delegate: self)
   }
@@ -128,12 +129,11 @@ extension MTextContentView: NSTextViewportLayoutControllerDelegate {
       if let layer = layers.object(forKey: textLayoutFragment) {
         return (layer, true)
       } else {
-        let layer = MTextLayoutFragmentLayer(layoutFragment: textLayoutFragment, contentsScale: window?.screen.scale ?? 2)
+        let layer = MTextLayoutFragmentLayer(layoutFragment: textLayoutFragment, contentsScale: storage.traitCollection.displayScale)
         layers.setObject(layer, forKey: textLayoutFragment)
         return (layer, false)
       }
     }
-    
     let (layer, isCached) = findLayer()
     if isCached {
       let oldPosition = layer.position
